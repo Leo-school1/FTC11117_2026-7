@@ -42,34 +42,25 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 // https://github.com/SuitBots/ftc_app/blob/isaac5-resq/FtcRobotController/src/main/java/com/suitbots/resq/Isaac5.java
 public class Hardware
 {
-    public final int MOTOR_VELOCITY = 2700;
     public DcMotorEx lf, lb, rf, rb;
 
-    // this standarizes it for pedro pathing
-    public final DcMotor.Direction lf_direction, lb_direction, rf_direction, rb_direction;
-
+    public final RobotConstants constants;
 
     public Telemetry telemetry;
     public BNO055IMU imu;
     Hardware(HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
-
-        // as of the current robot these all need to be reversed, including the right wheels
-        lf_direction = DcMotorSimple.Direction.REVERSE;
-        lb_direction = DcMotorSimple.Direction.REVERSE;
-        rf_direction = DcMotorSimple.Direction.REVERSE;
-        rb_direction = DcMotorSimple.Direction.REVERSE;
-
+        constants = new RobotConstants();
 
         lf = hardwareMap.get(DcMotorEx.class, "lf");
         lb = hardwareMap.get(DcMotorEx.class, "lb");
         rf = hardwareMap.get(DcMotorEx.class, "rf");
         rb = hardwareMap.get(DcMotorEx.class, "rb");
 
-        lf.setDirection(lf_direction);
-        lb.setDirection(lb_direction);
-        rf.setDirection(rf_direction);
-        rb.setDirection(rb_direction);
+        lf.setDirection(constants.lf_direction);
+        lb.setDirection(constants.lb_direction);
+        rf.setDirection(constants.rf_direction);
+        rb.setDirection(constants.rb_direction);
 
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -81,10 +72,10 @@ public class Hardware
     }
 
     public void setDriveMotors(double _lf, double _lb, double _rf, double _rb) {
-        lf.setVelocity((int)(_lf * MOTOR_VELOCITY));
-        lb.setVelocity((int)(_lb * MOTOR_VELOCITY));
-        rf.setVelocity((int)(_rf * MOTOR_VELOCITY));
-        rb.setVelocity((int)(_rb * MOTOR_VELOCITY));
+        lf.setVelocity((int)(_lf * constants.MOTOR_VELOCITY));
+        lb.setVelocity((int)(_lb * constants.MOTOR_VELOCITY));
+        rf.setVelocity((int)(_rf * constants.MOTOR_VELOCITY));
+        rb.setVelocity((int)(_rb * constants.MOTOR_VELOCITY));
         telemetry.addData("LF: ", lf.getVelocity());
         telemetry.addData("LB: ", lb.getVelocity());
         telemetry.addData("RF: ", rf.getVelocity());
