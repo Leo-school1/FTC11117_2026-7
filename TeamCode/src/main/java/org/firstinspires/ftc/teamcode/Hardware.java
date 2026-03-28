@@ -29,13 +29,15 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
 // Ex: "Hardware hardware = new Hardware(hardwareMap, telemetry)"
@@ -47,7 +49,7 @@ public class Hardware
     public final RobotConstants constants;
 
     public Telemetry telemetry;
-    public BNO055IMU imu;
+    public IMU imu;
     Hardware(HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
         constants = new RobotConstants();
@@ -62,13 +64,16 @@ public class Hardware
         rf.setDirection(constants.rf_direction);
         rb.setDirection(constants.rb_direction);
 
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
+        imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                        RevHubOrientationOnRobot.UsbFacingDirection.UP
+                )
+        );
         imu.initialize(parameters);
+        // may require some calibration period here?
+        imu.resetYaw();
     }
 
     public void setDriveMotors(double _lf, double _lb, double _rf, double _rb) {
@@ -93,9 +98,9 @@ public class Hardware
     }
 
     public void IMUTelemetry() {
-        telemetry.addData("Position:", imu.getPosition());
-        telemetry.addData("Velocity:", imu.getVelocity());
-        telemetry.addData("Acceleration:", imu.getAcceleration());
+        telemetry.addData("Yaw (degrees):", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addData("Yaw (radians):", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+
     }
 
 }
