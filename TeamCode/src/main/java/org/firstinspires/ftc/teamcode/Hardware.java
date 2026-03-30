@@ -29,11 +29,10 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -44,13 +43,12 @@ public class Hardware
 {
     public DcMotorEx lf, lb, rf, rb;
 
-    public final RobotConstants constants;
+    public final RobotConstants constants = new RobotConstants();
 
     public Telemetry telemetry;
-    public BNO055IMU imu;
+    public IMU imu;
     Hardware(HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
-        constants = new RobotConstants();
 
         lf = hardwareMap.get(DcMotorEx.class, "lf");
         lb = hardwareMap.get(DcMotorEx.class, "lb");
@@ -62,13 +60,16 @@ public class Hardware
         rf.setDirection(constants.rf_direction);
         rb.setDirection(constants.rb_direction);
 
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
+        imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                        RevHubOrientationOnRobot.UsbFacingDirection.UP
+                )
+        );
         imu.initialize(parameters);
+        // may require some calibration period here?
+        imu.resetYaw();
     }
 
     public void setDriveMotors(double _lf, double _lb, double _rf, double _rb) {
@@ -76,10 +77,7 @@ public class Hardware
         lb.setVelocity((int)(_lb * constants.MOTOR_VELOCITY));
         rf.setVelocity((int)(_rf * constants.MOTOR_VELOCITY));
         rb.setVelocity((int)(_rb * constants.MOTOR_VELOCITY));
-        telemetry.addData("LF: ", lf.getVelocity());
-        telemetry.addData("LB: ", lb.getVelocity());
-        telemetry.addData("RF: ", rf.getVelocity());
-        telemetry.addData("RB: ", rb.getVelocity());
+
     }
     public void mecanumDrive(double forward, double strafe, double rotate) {
         double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(rotate), 1);
@@ -91,11 +89,11 @@ public class Hardware
 
         setDriveMotors(LF, LB, RF, RB);
     }
-
-    public void IMUTelemetry() {
-        telemetry.addData("Position:", imu.getPosition());
-        telemetry.addData("Velocity:", imu.getVelocity());
-        telemetry.addData("Acceleration:", imu.getAcceleration());
+    public void updateTelemetry() {
+        telemetry.addData("LF: ", lf.getVelocity());
+        telemetry.addData("LB: ", lb.getVelocity());
+        telemetry.addData("RF: ", rf.getVelocity());
+        telemetry.addData("RB: ", rb.getVelocity());
     }
 
 }
