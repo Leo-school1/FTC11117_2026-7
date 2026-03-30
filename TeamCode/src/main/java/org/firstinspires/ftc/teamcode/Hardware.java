@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
 // Ex: "Hardware hardware = new Hardware(hardwareMap, telemetry)"
@@ -42,6 +43,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Hardware
 {
     public DcMotorEx lf, lb, rf, rb;
+
+
 
     public final RobotConstants constants = new RobotConstants();
 
@@ -72,13 +75,6 @@ public class Hardware
         imu.resetYaw();
     }
 
-    public void setDriveMotors(double _lf, double _lb, double _rf, double _rb) {
-        lf.setVelocity((int)(_lf * constants.MOTOR_VELOCITY));
-        lb.setVelocity((int)(_lb * constants.MOTOR_VELOCITY));
-        rf.setVelocity((int)(_rf * constants.MOTOR_VELOCITY));
-        rb.setVelocity((int)(_rb * constants.MOTOR_VELOCITY));
-
-    }
     public void mecanumDrive(double forward, double strafe, double rotate) {
         double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(rotate), 1);
 
@@ -87,13 +83,15 @@ public class Hardware
         double RF = (forward - strafe - rotate) / denominator;
         double RB = (forward + strafe - rotate) / denominator;
 
-        setDriveMotors(LF, LB, RF, RB);
+        lf.setPower(LF);
+        lb.setPower(LB);
+        rf.setPower(RF);
+        rb.setPower(RB);
     }
     public void updateTelemetry() {
-        telemetry.addData("LF: ", lf.getVelocity());
-        telemetry.addData("LB: ", lb.getVelocity());
-        telemetry.addData("RF: ", rf.getVelocity());
-        telemetry.addData("RB: ", rb.getVelocity());
+        telemetry.addData("Yaw (degrees):", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addData("Yaw (radians):", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+
     }
 
 }

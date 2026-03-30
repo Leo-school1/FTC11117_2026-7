@@ -8,11 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class Teleop extends OpMode
 {
     private Hardware hardware;
-    private Localizer localizer;
+
     @Override
     public void init() {
         hardware = new Hardware(hardwareMap, telemetry);
-        localizer = new Localizer(hardwareMap, telemetry);
         telemetry.addLine("Status: Initialized");
         telemetry.update();
 
@@ -23,9 +22,6 @@ public class Teleop extends OpMode
         hardware.mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         hardware.updateTelemetry();
 
-        localizer.updateTelemetry();
-
         telemetry.update();
-
     }
 }
