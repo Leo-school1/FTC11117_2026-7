@@ -46,17 +46,25 @@ public class Hardware
     public DcMotorEx lf, lb, rf, rb;
 
     private double x, y, heading; // cm and radians
-    private double lastX, lastY, lastHeading;
+    private double lastX, lastY; // raw readings
+    private double deltaX, deltaY, deltaHeading;
+
+    private Pose initPose;
+
 
     private final RobotConstants constants = new RobotConstants();
 
     public Telemetry telemetry;
     public IMU imu;
-    Hardware(Pose initPose, HardwareMap hardwareMap, Telemetry _telemetry) {
+    Hardware(Pose pose, HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
+        initPose = pose;
         x = initPose.getX();
         y = initPose.getY();
         heading = initPose.getHeading();
+
+        lastX = x;
+        lastY = y;
 
         lf = hardwareMap.get(DcMotorEx.class, "lf");
         lb = hardwareMap.get(DcMotorEx.class, "lb");
@@ -98,23 +106,27 @@ public class Hardware
         // lf -> X
         // lb -> Y
 
+        deltaX = (lf.getCurrentPosition()*constants.POD_CONVERSION_IN) + initPose.getX() - lastX;
+        deltaY = (lb.getCurrentPosition()*constants.POD_CONVERSION_IN) + initPose.getY() - lastY;
+        deltaHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + initPose.getHeading() - heading;
+
+        lastX += deltaX;
+        lastY += deltaY;
+        heading += deltaHeading;
         // rotation matrix
-        x += Math.cos(heading)*(lf.getCurrentPosition() - lastX);
-        x += -Math.sin(heading)*(lb.getCurrentPosition() - lastY);
+        x += Math.cos(heading)*(deltaX);
+        x += -Math.sin(heading)*(deltaY);
 
-        y += Math.sin(heading)*(lb.getCurrentPosition() - lastX);
-        y += Math.cos(heading)*(lf.getCurrentPosition() - lastY);
-
-
-        lastX = lf.getCurrentPosition();
-        lastY = lb.getCurrentPosition();
-        lastHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        y += Math.sin(heading)*(deltaX);
+        y += Math.cos(heading)*(deltaY);
     }
+
     public Pose getRobotPose() {
         return new Pose(x, y, heading);
     }
 
     public void updateTelemetry() {
+
         telemetry.addData("Yaw (degrees):", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         telemetry.addData("Yaw (radians):", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
     }

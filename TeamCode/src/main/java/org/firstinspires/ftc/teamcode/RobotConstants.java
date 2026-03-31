@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.robot.Robot;
 
 
 public class RobotConstants {
     public final DcMotor.Direction lf_direction, lb_direction, rf_direction, rb_direction;
     public final int MOTOR_VELOCITY = 2700;
+    public final double POD_CONVERSION_IN = (3.2)*(Math.PI/2000)/2.54;
 
 
     public RobotConstants() {

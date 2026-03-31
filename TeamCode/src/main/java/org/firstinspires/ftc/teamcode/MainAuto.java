@@ -15,7 +15,7 @@ import com.pedropathing.util.Timer;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
-@Autonomous(name = "Main Opmode", group = "Autonomous")
+@Autonomous(name = "MainAuto", group = "Autonomous")
 public class MainAuto extends OpMode {
     Hardware hardware;
 
@@ -63,6 +63,8 @@ public class MainAuto extends OpMode {
     public void loop() {
         follower.update();
         pathStateUpdate();
+        hardware.updatePose();
+        follower.setPose(hardware.getRobotPose());
         // TODO add localization
 
         telemetry.addData("Path State", pathstate.toString());
