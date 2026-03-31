@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -44,14 +45,18 @@ public class Hardware
 {
     public DcMotorEx lf, lb, rf, rb;
 
+    private double x, y, heading; // cm and radians
+    private double lastX, lastY, lastHeading;
 
-
-    public final RobotConstants constants = new RobotConstants();
+    private final RobotConstants constants = new RobotConstants();
 
     public Telemetry telemetry;
     public IMU imu;
-    Hardware(HardwareMap hardwareMap, Telemetry _telemetry) {
+    Hardware(Pose initPose, HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
+        x = initPose.getX();
+        y = initPose.getY();
+        heading = initPose.getHeading();
 
         lf = hardwareMap.get(DcMotorEx.class, "lf");
         lb = hardwareMap.get(DcMotorEx.class, "lb");
@@ -88,10 +93,30 @@ public class Hardware
         rf.setPower(RF);
         rb.setPower(RB);
     }
+
+    public void updatePose() {
+        // lf -> X
+        // lb -> Y
+
+        // rotation matrix
+        x += Math.cos(heading)*(lf.getCurrentPosition() - lastX);
+        x += -Math.sin(heading)*(lb.getCurrentPosition() - lastY);
+
+        y += Math.sin(heading)*(lb.getCurrentPosition() - lastX);
+        y += Math.cos(heading)*(lf.getCurrentPosition() - lastY);
+
+
+        lastX = lf.getCurrentPosition();
+        lastY = lb.getCurrentPosition();
+        lastHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+    }
+    public Pose getRobotPose() {
+        return new Pose(x, y, heading);
+    }
+
     public void updateTelemetry() {
         telemetry.addData("Yaw (degrees):", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         telemetry.addData("Yaw (radians):", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
-
     }
 
 }

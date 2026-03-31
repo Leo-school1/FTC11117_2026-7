@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @Autonomous(name = "Main Opmode", group = "Autonomous")
 public class MainAuto extends OpMode {
+    Hardware hardware;
 
     private Follower follower;
     public enum PathState {
