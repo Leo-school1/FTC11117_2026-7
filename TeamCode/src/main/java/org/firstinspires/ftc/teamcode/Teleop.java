@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,11 +9,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class Teleop extends OpMode
 {
     private Hardware hardware;
-    private Localizer localizer;
+
     @Override
     public void init() {
-        hardware = new Hardware(hardwareMap, telemetry);
-        localizer = new Localizer(hardwareMap, telemetry);
+        hardware = new Hardware(new Pose(72,72, Math.toRadians(90)), hardwareMap, telemetry);
         telemetry.addLine("Status: Initialized");
         telemetry.update();
 
@@ -22,10 +22,9 @@ public class Teleop extends OpMode
     public void loop() {
         hardware.mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         hardware.updateTelemetry();
-
-        localizer.updateTelemetry();
+        hardware.updatePose();
+        telemetry.addData("Pose", hardware.getRobotPose().toString());
 
         telemetry.update();
-
     }
 }
