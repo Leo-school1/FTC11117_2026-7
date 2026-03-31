@@ -1,6 +1,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.media.audiofx.Visualizer;
+
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -23,6 +25,7 @@ public class Teleop extends OpMode
         hardware.mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         hardware.updateTelemetry();
         hardware.updatePose();
+
         telemetry.addData("Pose", hardware.getRobotPose().toString());
 
         telemetry.update();
