@@ -38,8 +38,10 @@ public class Constants {
     public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
             .forwardEncoder_HardwareMapName("lb")
             .strafeEncoder_HardwareMapName("lf")
-            //.forwardPodY(0)
-            //.strafePodX(0)
+            .forwardPodY(2.504)
+            .strafePodX(-2.388)
+            .forwardTicksToInches(0.003051213)
+            .strafeTicksToInches(-0.003041917)
             .IMU_HardwareMapName("imu")
             .IMU_Orientation(
                     new RevHubOrientationOnRobot(

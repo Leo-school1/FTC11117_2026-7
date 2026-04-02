@@ -14,65 +14,61 @@ import com.pedropathing.util.Timer;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-
-@Autonomous(name = "MainAuto", group = "Autonomous")
+@Autonomous(name = "MainAuto", group = "Test")
 public class MainAuto extends OpMode {
-    Hardware hardware;
 
     private Follower follower;
-    public enum PathState {
-        MOVE_FORWARD,
-        HOLD,
-    }
-    PathState pathstate;
-    // POSES
-    private final Pose startPose = new Pose(72,72, Math.toRadians(90));
-    private final Pose forwardPose = new Pose(84, 72, Math.toRadians(90));
 
-    private PathChain forwardChain;
-    public void buildPaths() {
-        forwardChain = follower.pathBuilder()
-                .addPath(new BezierLine(startPose, forwardPose))
-                .setLinearHeadingInterpolation(startPose.getHeading(), forwardPose.getHeading())
-                .build();
-    }
+    // ===== POSES =====
+    private final Pose startPose = new Pose(72, 72, Math.toRadians(90));
+    private final Pose forwardPose = new Pose(96, 72, Math.toRadians(90));
 
-    public void pathStateUpdate() {
-        switch(pathstate) {
-            case MOVE_FORWARD:
-                follower.followPath(forwardChain, true);
-                pathstate = PathState.HOLD;
-                break;
-            case HOLD:
-                if (!follower.isBusy()) {
-                    telemetry.addLine("Done");
-                }
-                break;
-            default:
-                telemetry.addLine("Enountered Default Case");
-                break;
-        }
-    }
+    // ===== PATHS =====
+    private PathChain testPath;
 
     @Override
     public void init() {
         follower = Constants.createFollower(hardwareMap);
+
+        // Set starting pose manually (VERY IMPORTANT for custom localization)
+        follower.setPose(startPose);
+
+        buildPaths();
+    }
+
+    private void buildPaths() {
+        testPath = follower.pathBuilder()
+                .addPath(new BezierLine(startPose, forwardPose))
+                .setLinearHeadingInterpolation(
+                        startPose.getHeading(),
+                        forwardPose.getHeading()
+                )
+                .build();
+    }
+
+    @Override
+    public void start() {
+        // Run path ONCE
+        follower.followPath(testPath, true);
     }
 
     @Override
     public void loop() {
+        // Always update follower
         follower.update();
-        pathStateUpdate();
-        hardware.updatePose();
-        follower.setPose(hardware.getRobotPose());
-        // TODO add localization
 
-        telemetry.addData("Path State", pathstate.toString());
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
+        // ===== TELEMETRY =====
+        Pose pose = follower.getPose();
+
+        telemetry.addData("Busy", follower.isBusy());
+        telemetry.addData("X", pose.getX());
+        telemetry.addData("Y", pose.getY());
+        telemetry.addData("Heading", pose.getHeading());
+
+        if (!follower.isBusy()) {
+            telemetry.addLine("Path Complete");
+        }
+
+        telemetry.update();
     }
-
-
-
 }
