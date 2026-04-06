@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.RobotConstants;
 public class Constants {
     public static final RobotConstants constants = new RobotConstants();
 
-    public static FollowerConstants followerConstants = new FollowerConstants();
-        //.mass(kg)
+    public static FollowerConstants followerConstants = new FollowerConstants()
+            .mass(4.6);
 
 
 
@@ -33,7 +33,7 @@ public class Constants {
             .rightFrontMotorDirection(constants.rf_direction)
             .rightRearMotorDirection(constants.rb_direction);
 
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
+    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 0.8, 1);
 
     public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
             .forwardEncoder_HardwareMapName("lb")
