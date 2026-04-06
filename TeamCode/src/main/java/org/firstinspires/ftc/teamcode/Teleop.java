@@ -24,9 +24,6 @@ public class Teleop extends OpMode
     public void loop() {
         hardware.mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         hardware.updateTelemetry();
-        hardware.updatePose();
-
-        telemetry.addData("Pose", hardware.getRobotPose().toString());
 
         telemetry.update();
     }
