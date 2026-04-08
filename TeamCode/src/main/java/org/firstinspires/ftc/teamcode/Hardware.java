@@ -75,17 +75,6 @@ public class Hardware
         lb.setDirection(constants.lb_direction);
         rf.setDirection(constants.rf_direction);
         rb.setDirection(constants.rb_direction);
-/*
-        imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(
-                new RevHubOrientationOnRobot(
-                        RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                        RevHubOrientationOnRobot.UsbFacingDirection.UP
-                )
-        );
-        imu.initialize(parameters);
-        // may require some calibration period here?
-        imu.resetYaw(); */
     }
 
     public void mecanumDrive(double forward, double strafe, double rotate) {
@@ -101,34 +90,9 @@ public class Hardware
         rf.setPower(RF);
         rb.setPower(RB);
     }
-/*
-    public void updatePose() {
-        // lf -> X
-        // lb -> Y
 
-        deltaX = (lf.getCurrentPosition()*constants.POD_CONVERSION_IN) + initPose.getX() - lastX;
-        deltaY = (lb.getCurrentPosition()*constants.POD_CONVERSION_IN) + initPose.getY() - lastY;
-        deltaHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + initPose.getHeading() - heading;
-
-        lastX += deltaX;
-        lastY += deltaY;
-        heading += deltaHeading;
-        // rotation matrix
-        x += Math.cos(heading)*(deltaX);
-        x += -Math.sin(heading)*(deltaY);
-
-        y += Math.sin(heading)*(deltaX);
-        y += Math.cos(heading)*(deltaY);
-    }
-
-    public Pose getRobotPose() {
-        return new Pose(x, y, heading);
-    }
-*/
     public void updateTelemetry() {
 
-//        telemetry.addData("Yaw (degrees):", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-//        telemetry.addData("Yaw (radians):", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
     }
 
 }
