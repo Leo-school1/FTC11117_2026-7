@@ -52,7 +52,7 @@ public class Testing extends OpMode
 
     @Override
     public void init() {
-        hardware = new Hardware(new Pose(72,72, Math.toRadians(90)), hardwareMap, telemetry);
+        hardware = new Hardware(hardwareMap, telemetry);
 
         devices = new ArrayList<>();
         devices.add(hardware.lf);
