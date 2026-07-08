@@ -31,11 +31,19 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.pedropathing.ivy.Scheduler.schedule;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.Pose;
 import com.pedropathing.ivy.Scheduler;
 import com.pedropathing.ivy.Command;
+import static com.pedropathing.ivy.pedro.PedroCommands.*;
 import static com.pedropathing.ivy.groups.Groups.*;
+
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
 
@@ -56,12 +64,22 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name="IvyAuto", group="Auto")
 public class IvyAuto extends LinearOpMode {
 
+    Follower follower;
+    private final Pose startPose = new Pose(72, 72, Math.toRadians(90));
+    private final Pose shootPose = new Pose(100, 115, Math.toRadians(40));
+    private PathChain shootPath;
+
     @Override
     public void runOpMode() {
         Scheduler.reset();
 
-        Command sequence = sequential(
+        follower = Constants.createFollower(hardwareMap);
+        follower.setPose(startPose);
 
+        Command goToShoot = follow(follower, shootPath);
+
+        Command sequence = sequential(
+            goToShoot
         );
 
         waitForStart();
@@ -69,5 +87,14 @@ public class IvyAuto extends LinearOpMode {
         while (opModeIsActive()) {
             Scheduler.execute();
         }
+    }
+    private void buildPaths() {
+        shootPath = follower.pathBuilder()
+                .addPath(new BezierLine(startPose, shootPose))
+                .setLinearHeadingInterpolation(
+                        startPose.getHeading(),
+                        shootPose.getHeading()
+                )
+                .build();
     }
 }
