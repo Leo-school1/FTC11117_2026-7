@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
+import com.pedropathing.ivy.groups.Groups;
 
 // Ex: "Hardware hardware = new Hardware(hardwareMap, telemetry)"
 // https://github.com/SuitBots/ftc_app/blob/isaac5-resq/FtcRobotController/src/main/java/com/suitbots/resq/Isaac5.java
@@ -56,15 +56,12 @@ public class Hardware
 
     public Telemetry telemetry;
     public IMU imu;
-    Hardware(Pose pose, HardwareMap hardwareMap, Telemetry _telemetry) {
+    Hardware(HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
-        initPose = pose;
         x = initPose.getX();
         y = initPose.getY();
         heading = initPose.getHeading();
 
-        lastX = x;
-        lastY = y;
 
         lf = hardwareMap.get(DcMotorEx.class, "lf");
         lb = hardwareMap.get(DcMotorEx.class, "lb");
@@ -78,6 +75,8 @@ public class Hardware
     }
 
     public void mecanumDrive(double forward, double strafe, double rotate) {
+        //adjustments for Tarq
+        rotate *= 0.9;
         double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(rotate), 1);
 
         double LF = (forward + strafe + rotate) / denominator;
