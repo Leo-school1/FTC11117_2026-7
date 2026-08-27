@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -58,15 +59,17 @@ public class Hardware
     public IMU imu;
     Hardware(HardwareMap hardwareMap, Telemetry _telemetry) {
         telemetry = _telemetry;
-        x = initPose.getX();
-        y = initPose.getY();
-        heading = initPose.getHeading();
 
 
         lf = hardwareMap.get(DcMotorEx.class, "lf");
         lb = hardwareMap.get(DcMotorEx.class, "lb");
         rf = hardwareMap.get(DcMotorEx.class, "rf");
         rb = hardwareMap.get(DcMotorEx.class, "rb");
+
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         lf.setDirection(constants.lf_direction);
         lb.setDirection(constants.lb_direction);
@@ -76,9 +79,8 @@ public class Hardware
 
     public void mecanumDrive(double forward, double strafe, double rotate) {
         //adjustments for Tarq
-        rotate *= 0.9;
+        rotate *= 0.75;
         double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(rotate), 1);
-
         double LF = (forward + strafe + rotate) / denominator;
         double LB = (forward - strafe + rotate) / denominator;
         double RF = (forward - strafe - rotate) / denominator;
