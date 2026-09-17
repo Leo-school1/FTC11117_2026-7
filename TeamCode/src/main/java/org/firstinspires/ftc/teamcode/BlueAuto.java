@@ -62,7 +62,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
  */
 
 @Autonomous(name="IvyAuto", group="Auto")
-public class IvyAuto extends LinearOpMode {
+public class BlueAuto extends LinearOpMode {
 
     Follower follower;
     private final Pose startPose = new Pose(72, 72, Math.toRadians(90));
