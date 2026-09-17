@@ -93,6 +93,10 @@ public class Hardware
     }
 
     public void updateTelemetry() {
+        telemetry.addData("LF: ",lf.getVelocity());
+        telemetry.addData("LB: ",lb.getVelocity());
+        telemetry.addData("RF: ",rf.getVelocity());
+        telemetry.addData("RB: ",rb.getVelocity());
 
     }
 
