@@ -61,10 +61,11 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="IvyAuto", group="Auto")
+@Autonomous(name="BlueAuto", group="Auto")
 public class BlueAuto extends LinearOpMode {
 
     Follower follower;
+
     private final Pose startPose = new Pose(72, 72, Math.toRadians(90));
     private final Pose shootPose = new Pose(100, 115, Math.toRadians(40));
     private PathChain shootPath;
