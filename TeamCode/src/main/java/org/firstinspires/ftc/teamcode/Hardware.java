@@ -29,7 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -44,7 +44,7 @@ import com.pedropathing.ivy.groups.Groups;
 // https://github.com/SuitBots/ftc_app/blob/isaac5-resq/FtcRobotController/src/main/java/com/suitbots/resq/Isaac5.java
 public class Hardware
 {
-    public DcMotorEx lf, lb, rf, rb;
+    public DcMotorEx lf, lb, rf, rb, launcher;
 
     private double x, y, heading; // cm and radians
     private double lastX, lastY; // raw readings
@@ -65,6 +65,7 @@ public class Hardware
         lb = hardwareMap.get(DcMotorEx.class, "lb");
         rf = hardwareMap.get(DcMotorEx.class, "rf");
         rb = hardwareMap.get(DcMotorEx.class, "rb");
+        launcher = hardwareMap.get(DcMotorEx.class, "launcher");
 
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -97,6 +98,7 @@ public class Hardware
         telemetry.addData("LB: ",lb.getVelocity());
         telemetry.addData("RF: ",rf.getVelocity());
         telemetry.addData("RB: ",rb.getVelocity());
+        telemetry.addData("Launcher", launcher.getVelocity());
 
     }
 

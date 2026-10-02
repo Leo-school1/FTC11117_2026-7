@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 
 import android.media.audiofx.Visualizer;
 
-import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 

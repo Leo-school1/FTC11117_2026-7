@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import android.annotation.SuppressLint;
 
-import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -48,7 +47,10 @@ public class Testing extends OpMode
     private int deviceIndex = 0;
     private boolean rightBumperPrev = false;
     private boolean leftBumperPrev = false;
+    private boolean aPrev,bPrev,xPrev,yPrev = false;
     private List<DcMotorEx> devices = null;
+    private int targetVelocity = 0;
+    private int targetVelocityDirection = 1;
 
     @Override
     public void init() {
@@ -59,6 +61,8 @@ public class Testing extends OpMode
         devices.add(hardware.rf);
         devices.add(hardware.lb);
         devices.add(hardware.rb);
+
+
 
         telemetry.addLine("Status: Initialized");
 
@@ -98,10 +102,24 @@ public class Testing extends OpMode
                 hardware.lb.getVelocity(),
                 hardware.rb.getVelocity()
         ));
+
+        if (gamepad1.dpad_down) {targetVelocityDirection = -1;} else {targetVelocityDirection = 1;}
+
+        if (gamepad1.a && !aPrev) {targetVelocity += targetVelocityDirection;}
+        if (gamepad1.b && !bPrev) {targetVelocity += 10*targetVelocityDirection;}
+        if (gamepad1.y && !yPrev) {targetVelocity += 100*targetVelocityDirection;}
+        if (gamepad1.x && !xPrev) {targetVelocity += 1000*targetVelocityDirection;}
+
+        telemetry.addData("Launcher Target Velocity: ", targetVelocity);
+        telemetry.addData("Launcher Actual Velocity: ", hardware.launcher.getVelocity());
         telemetry.update();
 
         rightBumperPrev = gamepad1.right_bumper;
         leftBumperPrev = gamepad1.left_bumper;
+        aPrev = gamepad1.a;
+        bPrev = gamepad1.b;
+        xPrev = gamepad1.x;
+        yPrev = gamepad1.y;
     }
 
 }
