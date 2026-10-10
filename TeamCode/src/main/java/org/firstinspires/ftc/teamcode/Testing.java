@@ -110,6 +110,8 @@ public class Testing extends OpMode
         if (gamepad1.y && !yPrev) {targetVelocity += 100*targetVelocityDirection;}
         if (gamepad1.x && !xPrev) {targetVelocity += 1000*targetVelocityDirection;}
 
+        hardware.setVelocity(targetVelocity);
+
         telemetry.addData("Launcher Target Velocity: ", targetVelocity);
         telemetry.addData("Launcher Actual Velocity: ", hardware.launcher.getVelocity());
         telemetry.update();
